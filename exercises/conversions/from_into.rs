@@ -35,6 +35,28 @@ impl Default for Person {
 // Otherwise, then return an instantiated Person object with the results
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let parts: Vec<&str> = s.split(',').collect();
+        if parts.len() != 2 {
+            return Default::default();
+        }
+        let name = match parts.get(0) {
+            None => return Default::default(),
+            Some(p) => {
+                if p.is_empty() {
+                    return Default::default();
+                } else {
+                    p.to_string()
+                }
+            }
+        };
+        let age: usize = match parts.get(1) {
+            Some(agestr) => match agestr.parse() {
+                Ok(a) => a,
+                Err(_) => return Default::default(),
+            },
+            None => return Default::default(),
+        };
+        Person { name, age }
     }
 }
 
